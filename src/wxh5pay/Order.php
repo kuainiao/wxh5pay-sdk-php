@@ -71,7 +71,7 @@ class Order
     }
 
     /**
-     * 微信H5支付统一下单
+     * 微信H5支付统一下单(返回支付地址,该地址会调用起微信客户端支付)
      * @return bool|string
      */
     public function unifiedorder()
@@ -101,7 +101,8 @@ class Order
     }
 
     /**
-     * 订单查询
+     * 订单查询(返回查询的订单数组)
+     * @return bool|mixed
      */
     public function orderquery()
     {
@@ -118,8 +119,8 @@ class Order
         $resArray = Core::xmlToArray($res);
 
         //成功返回下单地址
-        if ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'SUCCESS') {
-            return $resArray['mweb_url'];
+        if ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'SUCCESS' and $resArray['trade_state'] == 'SUCCESS') {
+            return $resArray;
         } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
             $this->errMsg = Core::error_code($resArray['err_code_des']);
             return false;
@@ -130,7 +131,7 @@ class Order
     }
 
     /**
-     * 关闭订单
+     * 关闭订单(返回是否成功)
      * @return bool
      */
     public function closeorder()
