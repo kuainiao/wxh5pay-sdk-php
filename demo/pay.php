@@ -12,6 +12,8 @@ $order->setParams([
     'body' => '测试产品',
     'out_trade_no' => date('YmdHis') . rand(10000, 9999),
     'total_fee' => '1',
+    'trade_type' => 'MWEB',
+    'device_info' => $config['device_info'],
     'spbill_create_ip' => '127.0.0.1',
     'notify_url' => $config['notify_url'],
     'scene_info' => '{"h5_info": {"type":"Wap","wap_url": "https://pay.qq.com","wap_name": "腾讯充值"}}'

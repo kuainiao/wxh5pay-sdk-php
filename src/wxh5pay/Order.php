@@ -38,9 +38,7 @@ class Order
         $this->setParams([
             'appid' => $this->config['APP_ID'],
             'mch_id' => $this->config['MCH_ID'],
-            'device_info' => $this->config['device_info'],
-            'sign_type' => 'MD5',
-            'trade_type' => 'MWEB'
+            'sign_type' => 'MD5'
         ]);
     }
 
@@ -116,8 +114,19 @@ class Order
         //发起查询请求
         $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['orderquery_url']);
 
+        //Xml转数组
+        $resArray = Core::xmlToArray($res);
 
-
+        //成功返回下单地址
+        if ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'SUCCESS') {
+            return $resArray['mweb_url'];
+        } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
+            $this->errMsg = Core::error_code($resArray['err_code_des']);
+            return false;
+        }else{
+            $this->errMsg = $resArray['return_msg'];
+            return false;
+        }
     }
 
     /**
