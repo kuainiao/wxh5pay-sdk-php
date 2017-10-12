@@ -123,7 +123,7 @@ class Order
         } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
             $this->errMsg = Core::error_code($resArray['err_code_des']);
             return false;
-        }else{
+        } else {
             $this->errMsg = $resArray['return_msg'];
             return false;
         }
@@ -131,6 +131,7 @@ class Order
 
     /**
      * 关闭订单
+     * @return bool
      */
     public function closeorder()
     {
@@ -143,6 +144,18 @@ class Order
         //发起查询请求
         $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['closeorder_url']);
 
+        //Xml转数组
+        $resArray = Core::xmlToArray($res);
 
+        //成功返回下单地址
+        if ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'SUCCESS') {
+            return true;
+        } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
+            $this->errMsg = Core::error_code($resArray['err_code_des']);
+            return false;
+        } else {
+            $this->errMsg = $resArray['return_msg'];
+            return false;
+        }
     }
 }
