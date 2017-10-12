@@ -11,6 +11,6 @@
 		"php": ">=5.6"
 	},
 	"autoload": {
-		"psr-4": { "wxpay\\": "src/wxh5pay" }
+		"psr-4": { "wxh5pay\\": "src/wxh5pay" }
 	}
 }
