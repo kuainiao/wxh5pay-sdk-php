@@ -1,0 +1,16 @@
+{
+	"name": "adcbguo/wxh5pay-sdk-php",
+	"description": "微信H5支付SDK PHP版本",
+	"keywords": ["wxh5pay"],
+	"type":"library",
+	"license": "MIT",
+	"authors": [
+		{"name": "adcbguo", "email": "adcbguo@qq.com"}
+	],
+	"require": {
+		"php": ">=5.6"
+	},
+	"autoload": {
+		"psr-4": { "wxpay\\": "src/wxh5pay" }
+	}
+}
