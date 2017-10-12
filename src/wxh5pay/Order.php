@@ -15,7 +15,7 @@ class Order
      * 参数
      * @var array
      */
-    private $params;
+    private $params = [];
 
     /**
      * 配置数组
@@ -39,7 +39,8 @@ class Order
             'appid' => $this->config['APP_ID'],
             'mch_id' => $this->config['MCH_ID'],
             'device_info' => $this->config['device_info'],
-            'sign_type' => 'MD5'
+            'sign_type' => 'MD5',
+            'trade_type' => 'MWEB'
         ]);
     }
 
@@ -59,10 +60,10 @@ class Order
 
     /**
      * 获取参数
-     * @param $name
+     * @param string $name
      * @return array|mixed
      */
-    public function getParams($name)
+    public function getParams($name = '')
     {
         if (empty($name)) {
             return $this->params;
@@ -95,8 +96,10 @@ class Order
         } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
             $this->errMsg = Core::error_code($resArray['err_code_des']);
             return false;
+        }else{
+            $this->errMsg = $resArray['return_msg'];
+            return false;
         }
-        return false;
     }
 
     /**
