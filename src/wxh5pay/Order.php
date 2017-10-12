@@ -90,13 +90,11 @@ class Order
         $resArray = Core::xmlToArray($res);
 
         //成功返回下单地址
-        if ($resArray['return_code'] == 'SUCCESS') {
-            if ($resArray['result_code'] == 'SUCCESS') {
-                return $resArray['mweb_url'];
-            } elseif ($resArray['result_code'] == 'FAIL') {
-                $this->errMsg = Core::error_code($resArray['err_code_des']);
-                return false;
-            }
+        if ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'SUCCESS') {
+            return $resArray['mweb_url'];
+        } elseif ($resArray['return_code'] == 'SUCCESS' and $resArray['result_code'] == 'FAIL') {
+            $this->errMsg = Core::error_code($resArray['err_code_des']);
+            return false;
         }
         return false;
     }
@@ -124,6 +122,15 @@ class Order
      */
     public function closeorder()
     {
+        //生成随机串
+        $this->setParams('nonce_str', Core::genRandomString());
+
+        //生成签名参数到数组
+        $this->setParams('sign', Sign::makeSign($this->params, $this->config['KEY']));
+
+        //发起查询请求
+        $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['closeorder_url']);
+
 
     }
 }
