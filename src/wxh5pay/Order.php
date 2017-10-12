@@ -24,6 +24,12 @@ class Order
     private $config;
 
     /**
+     * 错误提示
+     * @var string
+     */
+    public $errMsg;
+
+    /**
      * @param $config
      */
     public function __construct($config)
@@ -66,7 +72,8 @@ class Order
     }
 
     /**
-     * 统一下单
+     * 微信H5支付统一下单
+     * @return bool|string
      */
     public function unifiedorder()
     {
@@ -79,7 +86,17 @@ class Order
         //发起下单请求
         $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['unifiedorder_url']);
 
-        Core::xmlToArray($res);
+        $resArray = Core::xmlToArray($res);
+
+        if ($resArray['return_code'] == 'SUCCESS') {
+            if ($resArray['result_code'] == 'SUCCESS') {
+                return $resArray['mweb_url'];
+            } elseif ($resArray['result_code'] == 'FAIL') {
+                $this->errMsg = Core::error_code($resArray['err_code_des']);
+                return false;
+            }
+        }
+        return false;
     }
 
     /**
