@@ -86,8 +86,10 @@ class Order
         //发起下单请求
         $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['unifiedorder_url']);
 
+        //Xml转数组
         $resArray = Core::xmlToArray($res);
 
+        //成功返回下单地址
         if ($resArray['return_code'] == 'SUCCESS') {
             if ($resArray['result_code'] == 'SUCCESS') {
                 return $resArray['mweb_url'];
@@ -104,6 +106,16 @@ class Order
      */
     public function orderquery()
     {
+        //生成随机串
+        $this->setParams('nonce_str', Core::genRandomString());
+
+        //生成签名参数到数组
+        $this->setParams('sign', Sign::makeSign($this->params, $this->config['KEY']));
+
+        //发起查询请求
+        $res = Core::postXmlCurl(Core::arrayToXml($this->params), $this->config['orderquery_url']);
+
+
 
     }
 
